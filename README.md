@@ -1,4 +1,4 @@
-# Simple Ecommerce Service.
+# Simple Contact API Service.
 
 ## Description
 
