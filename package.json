@@ -12,6 +12,7 @@
     "test": "jest --watchAll --no-cache",
     "test:ci": "jest --forceExit",
     "watch-node": "nodemon dist/index.js",
+    "postinstall": "tsc",
     "watch-ts": "tsc -w"
   },
   "jest": {
