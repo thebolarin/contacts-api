@@ -54,7 +54,7 @@ export const create = async (payload: ContactPayload) => {
     const contact = Contact.build({
       firstName,
       lastName,
-      email,
+      email: email.toLowerCase(),
       phoneNumber
     });
 
@@ -115,7 +115,7 @@ export const update = async (contactId: string, payload: ContactPayload) => {
     if (firstName && firstName !== '') contactUpdateObj.firstName = firstName;
     if (lastName && lastName !== '') contactUpdateObj.lastName = lastName;
     if (phoneNumber && phoneNumber !== '') contactUpdateObj.phoneNumber = phoneNumber;
-    if (email && email !== '') contactUpdateObj.email = email;
+    if (email && email !== '') contactUpdateObj.email = email.toLowerCase();
 
     contact.set(contactUpdateObj);
     await contact.save();

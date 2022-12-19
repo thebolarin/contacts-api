@@ -51,7 +51,6 @@ const contactSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
 contactSchema.set('versionKey', 'version');
 contactSchema.plugin(updateIfCurrentPlugin);
 
