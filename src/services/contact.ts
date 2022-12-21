@@ -3,26 +3,27 @@ import { createContactEditHistory } from './contact-edit-history';
 import { ContactPayload, ContactQueryPayload } from '../interfaces/contact.interface';
 import { Contact } from '../models/contact';
 
-export const getAll = async (queryString: ContactQueryPayload) => {
+export const getAll = async (queryString: any) => {
   try {
-    let pageOptions = {
-      page: queryString.page || 0,
-      limit: (queryString.limit ? (queryString.limit > 100 ? 100 : queryString.limit) : 25)
+    let query: any = {};
+
+    if(queryString.searchTerm && queryString != ''){
+      const statement = { $regex: new RegExp(queryString.searchTerm), $options: 'i'}
+      const searchString = {
+        $or: [
+          { "firstName" : statement },
+          { "lastName" : statement },
+          { "email" : statement },
+        ]
+      }
+
+      query = { ...query, ...searchString }
     }
-
-    let query: ContactQueryPayload;
-
-    if (queryString.firstName && queryString.firstName != '') query.firstName = queryString.firstName;
-    if (queryString.lastName && queryString.lastName != '') query.lastName = queryString.lastName;
-    if (queryString.email && queryString.email != '') query.email = queryString.email;
 
     const contactsCount = await Contact.countDocuments(query).exec();
 
     const contacts = await Contact.find(query)
-      .sort({ createdAt: -1 })
-      .skip(pageOptions.page * pageOptions.limit)
-      .limit(pageOptions.limit * 1)
-      .exec();
+      .sort({ createdAt: -1 }).exec();
 
     return {
       status: "success",
@@ -30,10 +31,7 @@ export const getAll = async (queryString: ContactQueryPayload) => {
       message: "Contacts record fetched successfully.",
       data: {
         contacts,
-        total: contactsCount,
-        pages: Math.ceil(contactsCount / pageOptions.limit),
-        page: pageOptions.page,
-        limit: pageOptions.limit
+        total: contactsCount
       }
     }
 

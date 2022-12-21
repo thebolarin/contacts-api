@@ -1,23 +1,13 @@
 import { ContactEditHistoryPayload, ContactEditHistoryQueryPayload } from '../interfaces/contact-edit-history.interface';
 import { ContactEditHistory } from '../models/contact-edit-history';
 
-export const getAll = async (queryString: ContactEditHistoryQueryPayload) => {
+export const getAll = async (queryString: any) => {
     try {
-        let pageOptions = {
-            page: queryString.page || 0,
-            limit: (queryString.limit ? (queryString.limit > 100 ? 100 : queryString.limit) : 25)
-        }
-
         let query: ContactEditHistoryQueryPayload;
-
-        if (queryString.contact && queryString.contact != '') query.contact = queryString.contact;
-
         const contactEditHistoriesCount = await ContactEditHistory.countDocuments(query).exec();
 
-        const contactEditHistories = await ContactEditHistory.find({})
+        const contactEditHistories = await ContactEditHistory.find(query)
             .sort({ createdAt: -1 })
-            .skip(pageOptions.page * pageOptions.limit)
-            .limit(pageOptions.limit * 1)
             .exec();
 
         return {
@@ -26,10 +16,7 @@ export const getAll = async (queryString: ContactEditHistoryQueryPayload) => {
             message: "Contact Edit History record fetched successfully.",
             data: {
                 contactEditHistories,
-                total: contactEditHistoriesCount,
-                pages: Math.ceil(contactEditHistoriesCount / pageOptions.limit),
-                page: pageOptions.page,
-                limit: pageOptions.limit
+                total: contactEditHistoriesCount
             }
         }
 

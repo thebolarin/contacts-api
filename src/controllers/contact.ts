@@ -9,7 +9,7 @@ type CustomRequest = Request & { [key: string]: any }
 
 export const fetchContacts = async (req: CustomRequest, res: Response) => {
     try {
-        let result = await getAll(req.body);
+        let result = await getAll(req.query);
 
         return resultResMsg(res, result);
 
