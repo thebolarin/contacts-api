@@ -64,7 +64,7 @@ export const updateContact = async (req: Request, res: Response) => {
         await check("firstName", "Provide a valid first name").optional().isString().run(req);
         await check("lastName", "Provide a valid last name").optional().isString().run(req);
         await check("email", "Provide a valid email").optional().isEmail().custom(isValidEmail).run(req);
-        await check("phoneNumber", "Provide a valid phone number").optional().isString().isLength({ min: 5, max:15 })
+        await check("phoneNumber", "Provide a valid phone number").optional().isString()
         .matches(/^(\+|00)[1-9][0-9 \-\(\)\.]{7,32}$/)
         .custom(isValidPhoneNumber).run(req);
 

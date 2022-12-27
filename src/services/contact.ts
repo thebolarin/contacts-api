@@ -16,7 +16,7 @@ export const getAll = async (queryString: any) => {
           { "email" : statement },
         ]
       }
-
+      
       query = { ...query, ...searchString }
     }
 
