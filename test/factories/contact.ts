@@ -14,7 +14,7 @@ const data = async (props = {}) => {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
-        phoneNumber: faker.phone.phoneNumber(),
+        phoneNumber: faker.phone.phoneNumber('+48 91 ### ## ##')
     };
     return Object.assign({}, defaultProps, props);
 };

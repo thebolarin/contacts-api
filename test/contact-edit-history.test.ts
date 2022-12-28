@@ -4,6 +4,7 @@ import { app } from '../src/app';
 import mongoose from 'mongoose';
 import { Contact } from '../src/models/contact';
 import { ContactEditHistory } from '../src/models/contact-edit-history';
+import faker from 'faker';
 
 describe('contact ', () => {
   it('returns a 404 if the contact edit history is not found', async () => {
@@ -15,9 +16,17 @@ describe('contact ', () => {
   });
 
   it('returns the contact edit history if the contact is found', async () => {
-    const contact = await contactFactory();
-    const contactId = contact._id.toString();
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
+    const email = faker.internet.email();
+    const phoneNumber = faker.phone.phoneNumber('+48 91 ### ## ##')
 
+    const contact = await request(app)
+      .post('/api/contact')
+      .send({ firstName, lastName, email, phoneNumber })
+      .expect(201);
+
+    const contactId = contact.body.data._id.toString();
     await request(app)
       .put(`/api/contact/${contactId}`)
       .send({ firstName: "Moses" })
@@ -28,16 +37,22 @@ describe('contact ', () => {
       .expect(200);
 
     expect(response.body.status).toBe('success');
-    expect(response.body.data.total).toEqual(1);
+    expect(response.body.data.total).toEqual(2);
   });
 
 
   it('creates a contact edit history when a contact with valid inputs is created', async () => {
-    let contacts = await Contact.find({});
-    expect(contacts.length).toEqual(0);
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
+    const email = faker.internet.email();
+    const phoneNumber = faker.phone.phoneNumber('+48 91 ### ## ##')
 
-    const contact = await contactFactory();
-    const contactId = contact._id.toString();
+    const contact = await request(app)
+      .post('/api/contact')
+      .send({ firstName, lastName, email, phoneNumber })
+      .expect(201);
+
+    const contactId = contact.body.data._id.toString();
 
     await request(app)
       .put(`/api/contact/${contactId}`)
@@ -49,9 +64,8 @@ describe('contact ', () => {
       .expect(200);
 
     const contactEditHistories = await ContactEditHistory.find({});
-    expect(contactEditHistories.length).toEqual(1);
+    expect(contactEditHistories.length).toEqual(2);
     const id = contactEditHistories[0].contact.toString()
     expect(id).toEqual(contactId);
   });
 });
-

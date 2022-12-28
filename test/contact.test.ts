@@ -34,8 +34,8 @@ describe('contact ', () => {
             .get(`/api/contact/${contact._id}`)
             .expect(200);
 
-        expect(contactResponse.body.data.email).toEqual("contact@test.com");
-        expect(contactResponse.body.data.firstName).toEqual(contact.firstName);
+        expect(contactResponse.body.data.contact.email).toEqual("contact@test.com");
+        expect(contactResponse.body.data.contact.firstName).toEqual(contact.firstName);
     });
 
     it('has a route handler listening to /api/contact for post requests', async () => {
@@ -61,7 +61,7 @@ describe('contact ', () => {
         const firstName = faker.name.firstName();
         const lastName = faker.name.lastName();
         const email = faker.internet.email();
-        const phoneNumber = faker.phone.phoneNumber();
+        const phoneNumber = faker.phone.phoneNumber('+48 91 ### ## ##')
 
         await request(app)
             .post('/api/contact')
