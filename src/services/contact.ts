@@ -122,7 +122,6 @@ export const update = async (contactId: string, payload: ContactPayload) => {
 
     return { status: "success", statusCode: 200, message: "Contact updated successfully", data: contact };
   } catch (err) {
-    console.log(err)
     return { status: "error", statusCode: 500, message: "Invalid Request", data: err }
   }
 }
